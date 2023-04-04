@@ -1,0 +1,23 @@
+#include <arduinoSound.h>
+#include <Wire.h>
+#include <Adafruit_MAX98357.h>
+
+Adafruit_MAX98357 audio = Adafruit_MAX98357();
+
+void setup() {
+  audio.begin();
+  audio.setGain(12); 
+  Serial.begin(9600);
+}
+
+void loop() {
+  int frequency = 440; 
+  int duration = 1000; 
+  sound.tone(frequency, duration); 
+  delay(1000); 
+}
+
+
+
+
+
