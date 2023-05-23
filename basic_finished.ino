@@ -58,7 +58,7 @@ int IR_pin1= 35;
 int IR_pin2= 34;
 int IR_pin3= 32;
 int IR_pin4=33;
-int IR_pin5=12;
+int IR_pin5=22;
 Servo myservo; 
 int servoPin = 21;
 int pushButton = 2;
@@ -177,7 +177,7 @@ void setup() {
 
   xTaskCreatePinnedToCore(    codeForTask1,    "task1",    5000,      NULL,    2,    &Task1,    0);
    //delay(500);  // needed to start-up task1
-   xTaskCreatePinnedToCore(    codeForTask2,    "task2",    5000,    NULL,    2,    &Task2,    1);
+  //xTaskCreatePinnedToCore(    codeForTask2,    "task2",    5000,    NULL,    2,    &Task2,    1);
   //xTaskCreate(PlayWavs,"PlayWavs",stack_size,nullptr,4,nullptr);
   //xTaskCreate(spin,"spin",stack_size,nullptr,5,nullptr);
   //xTaskCreate(PlayWavs,"PlayWavs",stack_size,nullptr,4,nullptr);
@@ -360,7 +360,7 @@ bool InitWavFiles()
 {
   // initialise wav files  
   if(LoadWavFileHeader("/Ensoniq-ZR-76-01-Dope-77.wav",&Wav1)){
-    if(LoadWavFileHeader("/wav2_16.wav",&Wav2)){
+    if(LoadWavFileHeader("/Ensoniq-ZR-76-01-Dope-77.wav",&Wav2)){
         if( LoadWavFileHeader("/wav1_16.wav",&Wav3)){
           if( LoadWavFileHeader("/wav4_16.wav",&Wav4)){
             return LoadWavFileHeader("/wav5_16.wav",&Wav5);
