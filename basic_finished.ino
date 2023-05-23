@@ -137,7 +137,7 @@ int pushButton = 2;
     Wav_Struct Wav3;
     Wav_Struct Wav4; 
     Wav_Struct Wav5;                             // Secondary "short" wav 
-    float Volume;                              // Volume
+    float Volume=1;                              // Volume
 
 //------------------------------------------------------------------------------------------------------------------------
 
@@ -287,7 +287,7 @@ void PlayWavs()
                                                       // NUM_BYTES_TO_READ_FROM_FILE or less than this if we are very
                                                       // near the end of all files.
 
-  Volume=float(analogRead(POT_VOL_ANALOG_IN))/2047;   // You possibly don't need to sample volume this often, perhaps every 1/10 sec would be fine
+  Volume=1;//float(analogRead(POT_VOL_ANALOG_IN))/2047;   // You possibly don't need to sample volume this often, perhaps every 1/10 sec would be fine
   if(ReadingFile)                                     // Read next chunk of data in from files 
   {
     ReadFiles();                                      // Read data into the wavs own buffers
@@ -350,7 +350,7 @@ uint16_t MixWavs(byte* Samples)
     
   // We now alter the data according to the volume control
   for(i=0;i<MaxBytesInBuffer;i+=2)  // We step 2 bytes at a time as we're using 16bits per channel
-    *((int16_t *)(Samples+i))=(*((int16_t *)(Samples+i)))*Volume; 
+    *((int16_t *)(Samples+i))=(*((int16_t *)(Samples+i)))*1;//*Volume; 
 
   return MaxBytesInBuffer;
 }
@@ -391,7 +391,7 @@ void ReadFile(Wav_Struct *Wav)
 {
     uint16_t i;                                         // loop counter
     int16_t SignedSample;                               // Single Signed Sample
-    float Volume;               
+    float Volume=1;               
     
     if(Wav->TotalBytesRead+NUM_BYTES_TO_READ_FROM_FILE>Wav->DataSize)   // If next read will go past the end then adjust the 
       Wav->LastNumBytesRead=Wav->DataSize-Wav->TotalBytesRead;                    // amount to read to whatever is remaining to read
