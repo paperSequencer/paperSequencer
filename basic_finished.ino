@@ -150,11 +150,12 @@ void setup() {
   sensors[2]=false;
   sensors[3]=false;
   sensors[4]=false;  
-    Serial.begin(115200);                               // Used for info/debug
-    pinMode(IR_pin1,INPUT);
-    pinMode(IR_pin2,INPUT);
-    pinMode(IR_pin3,INPUT);
-    pinMode(IR_pin4,INPUT);
+	Serial.begin(115200);                               // Used for info/debug
+	pinMode(IR_pin1,INPUT);
+	pinMode(IR_pin2,INPUT);
+	pinMode(IR_pin3,INPUT);
+	pinMode(IR_pin4,INPUT);
+	pinMode(IR_pin5,INPUT);
     SDCardInit();
     i2s_driver_install(i2s_num, &i2s_config, 0, NULL);
     i2s_set_pin(i2s_num, &pin_config);
