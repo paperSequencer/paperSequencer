@@ -1,4 +1,10 @@
 **Welcome to Paper Sequencer git repo!**
+Paper Sequencer is an auditory device designed to emit a distinctive sound upon detecting a black square within any of its five discs.
+our user can: 
+Upload new sound files via a webpage or simply enjoy our pre-downloaded default sounds!
+Start and stop the system: click to start and click to stop the disks from spinning!
+Control the volume: move a button left and right to raise and reduce the volume!
+
 
 You can find the following files:
 - **Servo_with_click_arduino.ino:**
