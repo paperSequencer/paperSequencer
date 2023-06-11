@@ -377,7 +377,7 @@ bool LoadWavFileHeader(String FileName, Wav_Struct* Wav)
 
     Wav->WavFile = SD.open(FileName);                  // Open the wav file
     if(Wav->WavFile == false){
-        Serial.print("Could not open :");
+        Serial.println("Could not open :");
         Serial.println(FileName);
         return false;
     }
