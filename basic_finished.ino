@@ -65,7 +65,7 @@ int pushButton = 2;
 static const i2s_config_t i2s_config = 
 {
     .mode = (i2s_mode_t)(I2S_MODE_MASTER | I2S_MODE_TX),
-    .sample_rate = 44100,                                 // Note, all files must be this
+    .sample_rate = 16000,                                 // Note, all files must be this
     .bits_per_sample = I2S_BITS_PER_SAMPLE_16BIT,
     .channel_format = I2S_CHANNEL_FMT_RIGHT_LEFT,
     .communication_format = (i2s_comm_format_t)(I2S_COMM_FORMAT_I2S | I2S_COMM_FORMAT_I2S_MSB),
@@ -226,7 +226,7 @@ void getSensors(){
         counter++;
         sensors[4] = true;
     }
-    Serial.println(counter);
+   // Serial.println(counter);
 }
 
 
@@ -317,11 +317,11 @@ bool InitWavFiles()
 {
     // initialise wav files 
     // only bother trying to load this if first loads ok
-    if(LoadWavFileHeader("/flute.wav", &Wav1)){
-        if(LoadWavFileHeader("/bongo.wav", &Wav2)){
-            if( LoadWavFileHeader("/guitar.wav", &Wav3)){
-                if( LoadWavFileHeader("/harp.wav", &Wav4)){
-                    return LoadWavFileHeader("/piano.wav", &Wav5);
+    if(LoadWavFileHeader("/harp_16_16.wav", &Wav1)){
+        if(LoadWavFileHeader("/bongo_16_16.wav", &Wav2)){
+            if( LoadWavFileHeader("/guitar_16_16.wav", &Wav3)){
+                if( LoadWavFileHeader("/piano_16_16.wav", &Wav4)){
+                    return LoadWavFileHeader("/flute_16_16.wav", &Wav5);
                 }
             }
         }
