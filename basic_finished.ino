@@ -176,7 +176,7 @@ void setup() {
 	// different servos may require different min/max settings
 	// for an accurate 0 to 180 sweep
 
-  xTaskCreatePinnedToCore(    codeForTask1,    "task1",    5000,      NULL,    2,    &Task1,    0);
+  //xTaskCreatePinnedToCore(    codeForTask1,    "task1",    5000,      NULL,    2,    &Task1,    0);
    //delay(500);  // needed to start-up task1
   //xTaskCreatePinnedToCore(    codeForTask2,    "task2",    5000,    NULL,    2,    &Task2,    1);
   //xTaskCreate(PlayWavs,"PlayWavs",stack_size,nullptr,4,nullptr);
@@ -214,7 +214,7 @@ void codeForTask2( void * parameter ) {
 
 void loop()
 {   
-  //PlayWavs();  
+  PlayWavs();  
                                        // Have to keep calling this to keep the wav file playing
   //xTaskCreate(PlayWavs,"PlayWavs",stack_size,nullptr,4,nullptr);
   //xTaskCreate(spin,"spin",stack_size,nullptr,5,nullptr);
