@@ -147,12 +147,12 @@ void setup() {
     sensors[2] = false;
     sensors[3] = false;
     sensors[4] = false;  
-	Serial.begin(115200);                               // Used for info/debug
-	pinMode(IR_pin1,INPUT);
-	pinMode(IR_pin2,INPUT);
-	pinMode(IR_pin3,INPUT);
-	pinMode(IR_pin4,INPUT);
-	pinMode(IR_pin5,INPUT);
+    Serial.begin(115200);                               // Used for info/debug
+    pinMode(IR_pin1,INPUT);
+    pinMode(IR_pin2,INPUT);
+    pinMode(IR_pin3,INPUT);
+    pinMode(IR_pin4,INPUT);
+    pinMode(IR_pin5,INPUT);
     SDCardInit();
     i2s_driver_install(i2s_num, &i2s_config, 0, NULL);
     i2s_set_pin(i2s_num, &pin_config);
@@ -419,7 +419,7 @@ bool FillI2SBuffer(byte* Samples,uint16_t BytesInBuffer)
     
     if(BufferIdx >= BytesInBuffer) {
         // sent out all bytes in buffer, reset and return true to indicate this
-        BufferIdx=0; 
+        BufferIdx = 0; 
         return true;                             
     }
     else
@@ -438,31 +438,31 @@ void SDCardInit()
 
 bool ValidWavData(WavHeader_Struct* Wav)
 {
-    if(memcmp(Wav->RIFFSectionID,"RIFF",4)!=0) {    
+    if(memcmp(Wav->RIFFSectionID,"RIFF",4) != 0) {    
         Serial.println("Invalid data - Not RIFF format");
         return false;        
     }
-    if(memcmp(Wav->RiffFormat,"WAVE",4)!=0) {
+    if(memcmp(Wav->RiffFormat,"WAVE",4) != 0) {
         Serial.println("Invalid data - Not Wave file");
         return false;           
     }
-    if(memcmp(Wav->FormatSectionID,"fmt",3)!=0) {
+    if(memcmp(Wav->FormatSectionID,"fmt",3) != 0) {
         Serial.println("Invalid data - No format section found");
         return false;       
     }
-    if(memcmp(Wav->DataSectionID,"data",4)!=0) {
+    if(memcmp(Wav->DataSectionID,"data",4) != 0) {
         Serial.println("Invalid data - data section not found");
         return false;      
     }
-    if(Wav->FormatID!=1) {
+    if(Wav->FormatID != 1) {
         Serial.println("Invalid data - format Id must be 1");
         return false;                          
     }
-    if(Wav->FormatSize!=16) {
+    if(Wav->FormatSize != 16) {
         Serial.println("Invalid data - format section size must be 16.");
         return false;                          
     }
-    if((Wav->NumChannels!=1)&(Wav->NumChannels!=2)){
+    if((Wav->NumChannels != 1)&(Wav->NumChannels != 2)){
         Serial.println("Invalid data - only mono or stereo permitted.");
         return false;   
     }
@@ -470,7 +470,7 @@ bool ValidWavData(WavHeader_Struct* Wav)
         Serial.println("Invalid data - Sample rate cannot be greater than 48000");
         return false;                       
     }
-    if((Wav->BitsPerSample!=8)& (Wav->BitsPerSample!=16)) {
+    if((Wav->BitsPerSample != 8)& (Wav->BitsPerSample != 16)) {
         Serial.println("Invalid data - Only 8 or 16 bits per sample permitted.");
         return false;                        
     }
@@ -480,22 +480,22 @@ bool ValidWavData(WavHeader_Struct* Wav)
 
 void DumpWAVHeader(WavHeader_Struct* Wav)
 {
-    if(memcmp(Wav->RIFFSectionID,"RIFF",4)!=0) {
+    if(memcmp(Wav->RIFFSectionID,"RIFF",4) != 0) {
         Serial.println("Not a RIFF format file - ");    
         PrintData(Wav->RIFFSectionID,4);
         return;
     } 
-    if(memcmp(Wav->RiffFormat,"WAVE",4)!=0) {
+    if(memcmp(Wav->RiffFormat,"WAVE",4) != 0) {
         Serial.println("Not a WAVE file - ");  
         PrintData(Wav->RiffFormat,4);  
         return;
     }  
-    if(memcmp(Wav->FormatSectionID,"fmt",3)!=0) {
+    if(memcmp(Wav->FormatSectionID,"fmt",3) != 0) {
         Serial.println("fmt ID not present - ");
         PrintData(Wav->FormatSectionID,3);      
         return;
     } 
-    if(memcmp(Wav->DataSectionID,"data",4)!=0) {
+    if(memcmp(Wav->DataSectionID,"data",4) != 0) {
         Serial.println("data ID not present - "); 
         PrintData(Wav->DataSectionID,4);
         return;
