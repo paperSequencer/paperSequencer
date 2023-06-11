@@ -12,4 +12,3 @@ You can find the following files:
 - **user_interface.html:**
   Our user interface webpage.
 
-![Uploading image.png…]()
