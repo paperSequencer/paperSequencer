@@ -1,4 +1,5 @@
 **Welcome to Paper Sequencer git repo!**
+
 Paper Sequencer is an auditory device designed to emit a distinctive sound upon detecting a black square within any of its five discs.
 our user can: 
 Upload new sound files via a webpage or simply enjoy our pre-downloaded default sounds!
