@@ -1,4 +1,4 @@
-Welcome to Paper Sequencer git repo!
+**Welcome to Paper Sequencer git repo!
 
 You can find the following files:
 - Servo_with_click_arduino.ino:
