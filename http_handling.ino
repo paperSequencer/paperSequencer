@@ -67,8 +67,8 @@ int pushButton = 2;
 //  I2S configuration
 
 // SSID & Password
-const char* ssid = "Nashwa  :)";  // Enter your SSID here
-const char* password = "nashwa123";  //Enter your Password here
+const char* ssid = "***********";  // Enter your SSID here
+const char* password = "*********";  //Enter your Password here
 
 WebServer server(80);
 
