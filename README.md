@@ -16,6 +16,11 @@ our user can:
 
 - Control the volume: move a button left and right to raise and reduce the volume!
 
+## Physical model:
+![Alt text](images/pic1.jpeg)
+![Alt text](images/pic2.jpeg)
+![Alt text](images/pic3.jpeg)
+
 ## Wiring diagram and pins:
 
 ![Alt text](images/pins.png)
