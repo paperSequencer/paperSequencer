@@ -18,7 +18,7 @@ our user can:
 
 ## Physical model:
 ![Alt text](images/pic1.jpeg|width=)
-<img src="images/pic1.jpeg" width="100" height="100">
+<img src="images/pic1.jpeg" width="200" height="250">
 ![Alt text](images/pic3.jpeg)
 
 ## Wiring diagram and pins:
