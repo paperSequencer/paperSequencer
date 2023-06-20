@@ -10,6 +10,9 @@ Our user can:
 
 - Control the volume: move a button left and right to raise and reduce the volume!
 
+## Features list:
+<img src="images/feature_list.png" width="650" height="300">
+
 ## Physical model:
 <img src="images/pic1.jpeg" width="450" height="550">
 <img src="images/pic3.jpeg" width="450" height="550">
