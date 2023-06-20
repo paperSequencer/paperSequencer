@@ -22,7 +22,7 @@ our user can:
 
 ## Our webpage:
 The user can upload an audio file for each of the five disks.
-<img src="images/webpage.png" width="650" height="300">
+<img src="images/webpage.png" width="650" height="500">
 
 ## Wiring diagram and pins:
 
