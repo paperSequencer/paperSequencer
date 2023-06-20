@@ -17,13 +17,7 @@ our user can:
 - Control the volume: move a button left and right to raise and reduce the volume!
  
 ## Folder description :
-* ESP32: source code for the esp side (firmware).
-* Documentation: wiring diagram + basic operating instructions
-* Unit Tests: tests for individual hardware components (input / output devices)
-* flutter_app : dart code for our Flutter app.
-* Parameters: contains description of configurable parameters 
-* Assets: 3D printed parts, Audio files used in this project,
-* You can find the following files:
+ You can find the following files:
 - **Servo_with_click_arduino.ino:**
   A code that runs servo in a constant speed and a button can be attached.
 - **Audio_and_sensor_simple_test.ino:**
