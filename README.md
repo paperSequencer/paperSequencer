@@ -35,6 +35,9 @@ our user can:
 * ESP32Servo.h
 * SD.h
 * I2Saudio.h
+* WiFi.h
+* WebServer.h
+* ESPAsyncWebServer.h
 
 ## Project Poster:
  
