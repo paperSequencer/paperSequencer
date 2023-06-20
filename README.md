@@ -18,7 +18,7 @@ our user can:
 
 ## Wiring diagram and pins:
 
-![Alt text](images/Screenshot 2023-06-20 at 11.52.01.png)
+![Alt text](images/pins.png)
 ![Alt text](images/wiring_diagram.JPG)
 
 
