@@ -23,8 +23,9 @@ our user can:
 
 ## Wiring diagram and pins:
 
-![Alt text](images/pins.png)
-![Alt text](images/wiring_diagram.JPG)
+<img src="images/pins.png" width="550" height="400">
+<img src="images/wiring_diagram.JPG" width="450" height="550">
+
 
 
 ## Folder description :
