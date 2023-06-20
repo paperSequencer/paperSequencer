@@ -20,6 +20,9 @@ our user can:
 <img src="images/pic1.jpeg" width="450" height="550">
 <img src="images/pic3.jpeg" width="450" height="550">
 
+## Our webpage:
+The user can upload an audio file for each of the five disks.
+<img src="images/webpage.png" width="650" height="300">
 
 ## Wiring diagram and pins:
 
