@@ -2,7 +2,7 @@
 
 Paper Sequencer is an auditory device designed to emit a distinctive sound upon detecting a black square within any of its five discs.
 
-our user can: 
+Our user can: 
 
 - Upload new sound files via a webpage or simply enjoy our pre-downloaded default sounds!
 
@@ -14,9 +14,6 @@ Made by:
 - Adan Suleiman
 - Yazan Daoud
 - Nashwa Jaber
-
-## Details about the project
-
 
 ## Physical model:
 <img src="images/pic1.jpeg" width="450" height="550">
