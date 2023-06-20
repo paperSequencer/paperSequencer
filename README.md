@@ -3,7 +3,9 @@
 - Adan Suleiman
 - Yazan Daoud
 - Nashwa Jaber
-  
+
+![Alt text](images/poster.png)
+
 ## Details about the project
 
 Paper Sequencer is an auditory device designed to emit a distinctive sound upon detecting a black square within any of its five discs.
@@ -15,7 +17,11 @@ our user can:
 - Start and stop the system: click to start and click to stop the disks from spinning!
 
 - Control the volume: move a button left and right to raise and reduce the volume!
- 
+
+## Wiring diagram:
+
+![Alt text](images/wiring_diagram.JPG)
+
 ## Folder description :
  You can find the following files:
 - **Servo_with_click_arduino.ino:**
