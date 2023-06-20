@@ -23,7 +23,7 @@ our user can:
 
 ## Wiring diagram and pins:
 
-<img src="images/pins.png" width="650" height="400">
+<img src="images/pins.png" width="650" height="350">
 <img src="images/wiring_diagram.JPG" width="450" height="550">
 
 
