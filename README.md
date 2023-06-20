@@ -31,11 +31,10 @@ our user can:
 - **http_handling.ino:**
   using esp32 as an access point.
 
-## Arduino/ESP32 libraries used in this project:
 ## Arduino/ESP libraries installed for the project:
-* XXXX - version XXXXX
-* XXXX - version XXXXX
-* XXXX - version XXXXX
+* ESP32Servo.h
+* SD.h
+* I2Saudio.h
 
 ## Project Poster:
  
