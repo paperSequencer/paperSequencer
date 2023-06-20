@@ -1,4 +1,4 @@
-## Paper Sequencer Project:  
+## Paper Sequencer Project by Adan Suleiman, Yazan Daoud and Nashwa Jaber:  
 
 Paper Sequencer is an auditory device designed to emit a distinctive sound upon detecting a black square within any of its five discs.
 
