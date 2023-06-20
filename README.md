@@ -18,7 +18,6 @@ our user can:
 
 ## Physical model:
 ![Alt text](images/pic1.jpeg)
-![Alt text](images/pic2.jpeg)
 ![Alt text](images/pic3.jpeg)
 
 ## Wiring diagram and pins:
