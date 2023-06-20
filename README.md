@@ -10,11 +10,6 @@ Our user can:
 
 - Control the volume: move a button left and right to raise and reduce the volume!
 
-Made by:
-- Adan Suleiman
-- Yazan Daoud
-- Nashwa Jaber
-
 ## Physical model:
 <img src="images/pic1.jpeg" width="450" height="550">
 <img src="images/pic3.jpeg" width="450" height="550">
