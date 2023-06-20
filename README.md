@@ -13,20 +13,18 @@ Our user can:
 ## Features list:
 <img src="images/feature_list.png" width="550" height="250">
 
-## Physical model:
-<img src="images/pic1.jpeg" width="450" height="550">
-<img src="images/pic3.jpeg" width="450" height="550">
-
-## Our webpage:
-The user can upload an audio file for each of the five disks.
-<img src="images/webpage.png" width="650" height="500">
-
 ## Wiring diagram and pins:
 
 <img src="images/pins.png" width="650" height="300">
 <img src="images/wiring_diagram.JPG" width="450" height="550">
 
+## Our webpage:
+The user can upload an audio file for each of the five disks.
+<img src="images/webpage.png" width="650" height="500">
 
+## Physical model:
+<img src="images/pic1.jpeg" width="450" height="550">
+<img src="images/pic3.jpeg" width="450" height="550">
 
 ## Folder description :
  You can find the following files:
