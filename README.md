@@ -4,8 +4,6 @@
 - Yazan Daoud
 - Nashwa Jaber
 
-![Alt text](images/poster.png)
-
 ## Details about the project
 
 Paper Sequencer is an auditory device designed to emit a distinctive sound upon detecting a black square within any of its five discs.
