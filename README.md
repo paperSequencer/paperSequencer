@@ -16,9 +16,94 @@ our user can:
 
 - Control the volume: move a button left and right to raise and reduce the volume!
 
-## Wiring diagram:
+## Wiring diagram and pins:
 
 ![Alt text](images/wiring_diagram.JPG)
+
+SD:
+
+GND - GND
+
+MISO - 19
+
+MOSI - 23
+
+SCK - 18
+
+CS - 5
+
+3V3 - 3V3
+
+
+Max98357 Audio Amplifier:
+Field
+Pin
+GND
+GND
+DOUT
+25
+BCLK
+27
+LRC
+26
+VIN
+VIN
+
+
+Servo motor:
+Field
+Pin
+GND
+GND
+VIN
+5v
+ServoPin
+9
+
+
+Sensors:
+Field
+Pin
+IR_PIN1
+35
+IR_PIN2
+34
+IR_PIN3
+32
+IR_PIN4
+33
+IR_PIN5
+22
+VIN
+5v
+GND
+GND
+
+
+
+
+
+
+Speaker:
+Field
+Pin
+FMT
+GND
+XMT
+3.3v
+DOUT
+25
+BCLK
+27
+LRC
+26
+VIN
+5v
+GND
+GND
+
+
+
 
 ## Folder description :
  You can find the following files:
