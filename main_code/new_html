@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Paper Sequencer</title>
+  <style>
+    .heading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: white;
+      border: 3px solid black;
+    }
+
+    .heading-container h1, .heading-container h2 {
+      color: black;
+      margin: 0px;
+      margin-top: 10px;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-image: url("pic1.jpeg");
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+
+    h3 {
+      color: black;
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    p {
+      color: white;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .file-upload {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .file-upload input[type="file"] {
+      display: none;
+    }
+
+    .file-upload label {
+      background-color: black;
+      color: #ffffff;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .submit-button {
+      display: block;
+      margin: 0 auto;
+      margin-top: 10px;
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: black;
+      color: #ffffff;
+      border: none;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="heading-container">
+  <h1>Paper Sequencer - Song Selection</h1>
+  <h3>The Paper Sequencer is an innovative project comprising of five synchronized disks that produce captivating sounds upon encountering the color black.</h3>
+  </div>
+  <!-- <audio src="bsound.mp3" autoplay loop></audio> -->
+  <p>Please upload a WAV file for each of the five disks:</p>
+  <div class="file-upload">
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" id="disk1File" accept=".wav">
+      <label for="disk1File">Choose File for Disk 1</label>
+    </form>
+  </div>
+  <br>
+  <div class="file-upload">
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" id="disk2File" accept=".wav">
+      <label for="disk2File">Choose File for Disk 2</label>
+    </form>
+  </div>
+  <br>
+  <div class="file-upload">
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" id="disk3File" accept=".wav">
+      <label for="disk3File">Choose File for Disk 3</label>
+    </form>
+  </div>
+  <br>
+  <div class="file-upload">
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" id="disk4File" accept=".wav">
+      <label for="disk4File">Choose File for Disk 4</label>
+    </form>
+  </div>
+  <br>
+  <div class="file-upload">
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <input type="file" name="file" id="disk5File" accept=".wav">
+      <label for="disk5File">Choose File for Disk 5</label>
+    </form>
+  </div>
+  <br><br>
+  <button class="submit-button" onclick="submitSongs()">Submit</button>
+
+<script>
+    function submitSongs() {
+      document.getElementById('disk1File').form.submit();
+      document.getElementById('disk2File').form.submit();
+      document.getElementById('disk3File').form.submit();
+      document.getElementById('disk4File').form.submit();
+      document.getElementById('disk5File').form.submit();
+    }
+</script>
+</body>
+</html>
