@@ -334,8 +334,6 @@ void setup() {
     pinMode(IR_pin3,INPUT);
     pinMode(IR_pin4,INPUT);
     pinMode(IR_pin5,INPUT);
-    Volume=float(analogRead(POT_VOL_ANALOG_IN))/2047;
-    Serial.println(Volume);
     i2s_driver_install(i2s_num, &i2s_config, 0, NULL);
     i2s_set_pin(i2s_num, &pin_config);
     Serial.println("shboxi");
@@ -376,8 +374,6 @@ void setup() {
   config.ssid = default_ssid;
   config.wifipassword = default_wifipassword;
   config.webserverporthttp = default_webserverporthttp;
-Volume=float(analogRead(POT_VOL_ANALOG_IN))/2047;
-  Serial.println(Volume);
   Serial.print("\nConnecting to Wifi: ");
   WiFi.softAP(ssid, password);
   IPAddress IP = WiFi.softAPIP();
@@ -427,10 +423,6 @@ Volume=float(analogRead(POT_VOL_ANALOG_IN))/2047;
 
 }
 
-void updateVolume(){
-  Volume=float(analogRead(POT_VOL_ANALOG_IN))/2047;
-  Serial.println(Volume);
-}
 void loop() {
   switchState = digitalRead(pushButtonPin);
 
@@ -545,7 +537,7 @@ void PlayWavs()
     static uint16_t BytesReadFromFile;                  // Max Num bytes actually read from the wav files which will either be
                                                         // NUM_BYTES_TO_READ_FROM_FILE or less than this if we are very
                                                         // near the end of all files.
-    updateVolume();
+     Volume=float(analogRead(POT_VOL_ANALOG_IN))/2047;
     if(ReadingFile)                                     // Read next chunk of data in from files 
     {
         ReadFiles();                                      // Read data into the wavs own buffers
