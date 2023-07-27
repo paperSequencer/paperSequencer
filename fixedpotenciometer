@@ -538,6 +538,10 @@ void PlayWavs()
                                                         // NUM_BYTES_TO_READ_FROM_FILE or less than this if we are very
                                                         // near the end of all files.
      Volume=float(analogRead(POT_VOL_ANALOG_IN))/2047;
+     if(Volume<=0.5){
+       Volume=0;
+     }
+     Serial.println(Volume);
     if(ReadingFile)                                     // Read next chunk of data in from files 
     {
         ReadFiles();                                      // Read data into the wavs own buffers
