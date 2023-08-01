@@ -325,22 +325,14 @@ void setup() {
   pinMode(IR_pin5,INPUT);
   i2s_driver_install(i2s_num, &i2s_config, 0, NULL);
   i2s_set_pin(i2s_num, &pin_config);
-  Serial.println("shboxi");
-  delay(3000);
   pinMode(5, OUTPUT); 
    digitalWrite(5, HIGH); // SD card chips select, must use GPIO 5 (ESP32 SS)
     if(!SD.begin(5,SPI,4000000,"/sd",10,false)) {
         Serial.println("Error talking to SD card!");
         while(true);                  // end program
     }
-   Serial.println("shboxi2");
-   delay(3000);
-    Serial.println("shboxi6");
-   delay(3000);
     if(InitWavFiles() == false)
         while(true);                                   // If a problem terminate program   
-    Serial.println("shboxi7");
-   delay(3000);
     Wav1.Repeat = true;                                  // Wav1 will auto repeat
     Wav1.Playing = sensors[0];                           // We set wav1 to play comtinuously 
     Wav2.Repeat = true;                                  // Wav2 will auto repeat
@@ -355,8 +347,6 @@ void setup() {
   Serial.print("SD Free: "); Serial.println(humanReadableSize((SD.totalBytes() - SD.usedBytes())));
   Serial.print("SD Used: "); Serial.println(humanReadableSize(SD.usedBytes()));
   Serial.print("SD Total: "); Serial.println(humanReadableSize(SD.totalBytes()));
-  Serial.println("shboxi3");
-  delay(3000);
   Serial.println(listFiles());
   Serial.println("\nLoading Configuration ...");
 
@@ -368,16 +358,8 @@ void setup() {
   IPAddress IP = WiFi.softAPIP();
   Serial.print("AP IP address: ");
   Serial.println(IP);
-  Serial.println("shboxi4");
   Volume=float(analogRead(POT_VOL_ANALOG_IN))/2047;
   Serial.println(Volume);
-
-   delay(3000);
-//  //WiFi.begin(config.ssid.c_str(), config.wifipassword.c_str());
-//  //while (WiFi.status() != WL_CONNECTED) {
-//  //  delay(500);
-  //  Serial.print(".");
-  //}
   Serial.println("\n\nNetwork Configuration:");
   Serial.println("----------------------");
   Serial.print("         SSID: "); Serial.println(WiFi.SSID());
@@ -399,8 +381,6 @@ void setup() {
 //    Serial.println(logmessage);
 //    request->send_P(200, "text/html", stop_html);
 //  });
-  Serial.println("shboxi5");
-   delay(3000);
   // startup web server
   Serial.println("Starting Webserver ...");
   server->begin();
@@ -409,7 +389,9 @@ void setup() {
 //    Serial.println(logmessage);
 //    request->send_P(200, "text/html", stop_html);
 //  });
-
+Serial.println("Hello user, please connect to Paper Sequencer network the password is: 123456789");
+Serial.println("go to this website:%d ",IP);
+Serial.println("upload your wav files and make sure its 16bits and 16khz");
 }
 
 void loop() {
@@ -618,12 +600,10 @@ void PlayWavs()
    if (PinState5 != previousPinState5) {
     // If the switch state is HIGH, toggle the value of isSwitchOn
     if (previousPinState5== LOW) {
-        Serial.println("i should repeat");
           Wav5.Repeat = true;   
             
     }
        else {
-             Serial.println("i shouldnt repeat");
             Wav5.Repeat = false;
             Wav5.WavFile.seek(44);                                 // Reset to start of wav data  
             Wav5.TotalBytesRead = 0;  
@@ -801,11 +781,7 @@ String listFiles(bool ishtml) {
   String returnText = "";
   Serial.println("Listing files stored on SPIFFS");
   File root = SD.open("/");
-  Serial.println("SDboxi1");
-   delay(3000);
   File foundfile = root.openNextFile();
-  Serial.println("SDboxi2");
-   delay(3000);
   if (ishtml) {
     returnText += "<table><tr><th align='left'>Name</th><th align='left'>Size</th></tr>";
   }
@@ -816,8 +792,6 @@ String listFiles(bool ishtml) {
       returnText += "File: " + String(foundfile.name()) + "\n";
     }
     foundfile = root.openNextFile();
-    Serial.println("SDboxiLoop");
-   delay(3000);
   }
   if (ishtml) {
     returnText += "</table>";
