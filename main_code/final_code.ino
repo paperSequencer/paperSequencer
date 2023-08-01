@@ -5,27 +5,26 @@
 #include <SD.h>
 #include <SPI.h>
 #include "driver/i2s.h"  
+const String default_ssid = "Adan_iphone";
+const String default_wifipassword = "adan123456";
 const String ssid = "Paper Sequencer";
 const String password = "123456789";
 const int default_webserverporthttp = 80;
 bool is_init = false;
 
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// defines and consts
 
 #define POT_VOL_ANALOG_IN 35      // Pin that will connect to the middle pin of the potentiometer.
  
-// SD Card
+//    SD Card
 #define SD_CS          5          // SD Card chip select
 
-// Sensors' pins
-int IR_pin1 = 14;
-int IR_pin2 = 34;
-int IR_pin3 = 32;
-int IR_pin4 = 33;
-int IR_pin5 = 22;
+//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------
+// structures and also variables
 
-// Audio pins
+
+
 #define I2S_DOUT      25          // i2S Data out oin
 #define I2S_BCLK      27          // Bit clock
 #define I2S_LRC       26          // Left/Right clock, also known as Frame clock or word select
@@ -34,52 +33,7 @@ int IR_pin5 = 22;
 #define NUM_BYTES_TO_READ_FROM_FILE 1024    // How many bytes to read from wav file at a time
 #define stack_size 2048
 
-//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------------------------------------------------
-// structures and also variables
 
-bool sensors[5];
-static const i2s_port_t i2s_num = I2S_NUM_0;  // i2s port number   
-Wav_Struct Wav1;                              // Main Wave to play
-Wav_Struct Wav2;
-Wav_Struct Wav3;
-Wav_Struct Wav4; 
-Wav_Struct Wav5;                             // Secondary "short" wav 
-float Volume;                              // Volume
-String Prev_wav1 = "";
-String Curr_wav1 = "";
-String Prev_wav2 = "";
-String Curr_wav2 = "";
-String Prev_wav3 = "";
-String Curr_wav3 = "";
-String Prev_wav4 = "";
-String Curr_wav4 = "";
-String Prev_wav5 = "";
-String Curr_wav5 = "";
-int switchState = LOW;    // Initial state of the switch
-int previousSwitchState = LOW;
-bool isSwitchOn = false;
-int PinState1 = LOW;    // Initial state of the switch
-int previousPinState1 = LOW;
-int PinState2 = LOW;    // Initial state of the switch
-int previousPinState2 = LOW;
-int PinState3 = LOW;    // Initial state of the switch
-int previousPinState3 = LOW;
-int PinState4 = LOW;    // Initial state of the switch
-int previousPinState4 = LOW;
-int PinState5 = LOW;    // Initial state of the switch
-int previousPinState5 = LOW;
-String listFiles(bool ishtml = false);
-void SDCardInit();
-Config config;                        // configuration
-AsyncWebServer *server;               // initialise webserver
-bool InitWavFiles();
-void DumpWAVHeader(WavHeader_Struct* Wav);
-void PrintData(const char* Data,uint8_t NumBytes);
-bool ValidWavData(WavHeader_Struct* Wav);
-bool FillI2SBuffer(byte* Samples,uint16_t BytesInBuffer);
-bool LoadWavFileHeader(String FileName, Wav_Struct* Wav);
-void CloseWaveFiles();
 
 static const i2s_config_t i2s_config =
 {
@@ -152,9 +106,60 @@ struct Config {
 };
 
 
+bool sensors[5];
+int IR_pin1 = 14;
+int IR_pin2 = 34;
+int IR_pin3 = 32;
+int IR_pin4 = 33;
+int IR_pin5 = 22;
+int servoPin = 21;
+int pushButton = 2;
+static const i2s_port_t i2s_num = I2S_NUM_0;  // i2s port number   
+Wav_Struct Wav1;                              // Main Wave to play
+Wav_Struct Wav2;
+Wav_Struct Wav3;
+Wav_Struct Wav4; 
+Wav_Struct Wav5;                             // Secondary "short" wav 
+float Volume;                              // Volume
+String Prev_wav1 = "";
+String Curr_wav1 = "";
+String Prev_wav2 = "";
+String Curr_wav2 = "";
+String Prev_wav3 = "";
+String Curr_wav3 = "";
+String Prev_wav4 = "";
+String Curr_wav4 = "";
+String Prev_wav5 = "";
+String Curr_wav5 = "";
+
+
+#define pushButtonPin 14 
+#define servoPin 3
+int switchState = LOW;    // Initial state of the switch
+int previousSwitchState = LOW;
+bool isSwitchOn = false;
+
+
+int PinState1 = LOW;    // Initial state of the switch
+int previousPinState1 = LOW;
+int PinState2 = LOW;    // Initial state of the switch
+int previousPinState2 = LOW;
+int PinState3 = LOW;    // Initial state of the switch
+int previousPinState3 = LOW;
+int PinState4 = LOW;    // Initial state of the switch
+int previousPinState4 = LOW;
+int PinState5 = LOW;    // Initial state of the switch
+int previousPinState5 = LOW;
+
+String listFiles(bool ishtml = false);
+void SDCardInit();
+
+
+// variables
+Config config;                        // configuration
+AsyncWebServer *server;               // initialise webserver
 
 //------------------------------------------------------------------------------------------------------------------------
-// our HTML website
 
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML>
@@ -163,30 +168,83 @@ const char index_html[] PROGMEM = R"rawliteral(
 <html>
 <head>
   <title>Paper Sequencer</title>
+  <style>
+    p {
+      color: white;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    h1 {
+      text-align: center;
+    }
+  </style>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="UTF-8">
 </head>
+<body style="font-family: Arial, sans-serif; background-color: wheat; margin: 0; padding: 20px; display: flex; align-items: center;
+                            justify-content: center;">
 <center>
-<body style="font-family: Arial, sans-serif; background-color: #f7f7f7; margin: 0; padding: 20px;">
-<div style="text-align: center; margin-bottom: 20px;">
-<h1 style="color: #444;">Paper Sequencer - Song Selection</h1>
-<h3 style="color: #666;">The Paper Sequencer is an innovative project comprising of five synchronized disks that produce captivating sounds upon encountering the color black.</h3>
+<div style="text-align: center; margin-bottom: 20px; display:flex; flex-direction: column; align-items: center;">
+<h1 style=" display:flex; 
+            align-items: center;
+            padding: 1em;
+            border: 0.2em solid #795548;
+            width: 5em;
+            height: 5em;
+            border-radius: 100%;"><i style="color: #795548;">Paper Sequencer</i></h1>
+<h2 style = "color: #795548;">Song Selection</h2>
 </div>
-<p style="color: #555;">Please upload a WAV file for each of the five disks:</p>
-<form method="POST" action="/upload1" enctype="multipart/form-data"><input type="file" name="data" accept=".wav"/><input type="submit" name="upload" value="Upload First file" title="Upload File"></form><br>
-<form method="POST" action="/upload2" enctype="multipart/form-data"><input type="file" name="data" accept=".wav"/><input type="submit" name="upload" value="Upload Second file" title="Upload File"></form><br>
-<form method="POST" action="/upload3" enctype="multipart/form-data"><input type="file" name="data" accept=".wav"/><input type="submit" name="upload" value="Upload Third file" title="Upload File"></form><br>
-<form method="POST" action="/upload4" enctype="multipart/form-data"><input type="file" name="data" accept=".wav"/><input type="submit" name="upload" value="Upload Fourth file" title="Upload File"></form><br>
-<form method="POST" action="/upload5" enctype="multipart/form-data"><input type="file" name="data" accept=".wav"/><input type="submit" name="upload" value="Upload Fifth file" title="Upload File"></form><br>
-// <form method="POST" action="/upload6" enctype="multipart/form-data"><input type="submit" name="upload" value="Choose default audio files" title="Upload File"></form>
-</center>
-<p>%FILELIST%</p>
+<p style="color: black;">Please upload a WAV file for each of the five disks</p>
+<table>
+        <tr>
+            <th>select file</th>
+            <th>upload file</th>
+        </tr>
+        <tr>
+            <form method="POST" action="/upload1" enctype="multipart/form-data">
+                <td><input type="file" name="data" accept=".wav"/></td>
+                <td><input type="submit" name="upload" value="Upload First file" title="Upload File"></td>
+            </form>   
+        </tr>
+        <tr>
+            <form method="POST" action="/upload2" enctype="multipart/form-data">
+                <td><input type="file" name="data" accept=".wav"/></td>
+                <td><input type="submit" name="upload" value="Upload First file" title="Upload File"></td>
+            </form>    
+        </tr>
+        <tr>
+            <form method="POST" action="/upload3" enctype="multipart/form-data">
+                <td><input type="file" name="data" accept=".wav"/></td>
+                <td><input type="submit" name="upload" value="Upload First file" title="Upload File"></td>
+            </form>
+        </tr>
+        <tr>
+            <form method="POST" action="/upload4" enctype="multipart/form-data">
+                <td><input type="file" name="data" accept=".wav"/></td>
+                <td><input type="submit" name="upload" value="Upload First file" title="Upload File"></td>
+            </form>
+        </tr>
+        <tr>
+            <form method="POST" action="/upload5" enctype="multipart/form-data">
+                <td><input type="file" name="data" accept=".wav"/></td>
+                <td><input type="submit" name="upload" value="Upload First file" title="Upload File"></td>
+            </form>
+        </tr>
+    </table>
+    </center>
 </body>
 </html>
 )rawliteral";
+bool InitWavFiles();
+void DumpWAVHeader(WavHeader_Struct* Wav);
+void PrintData(const char* Data,uint8_t NumBytes);
+bool ValidWavData(WavHeader_Struct* Wav);
+bool FillI2SBuffer(byte* Samples,uint16_t BytesInBuffer);
+bool LoadWavFileHeader(String FileName, Wav_Struct* Wav);
+void CloseWaveFiles();
 
-//------------------------------------------------------------------------------------------------------------------------
 
 void rebootESP(String message) {
   Serial.print("Rebooting ESP32: "); Serial.println(message);
@@ -194,7 +252,18 @@ void rebootESP(String message) {
 }
 
 void setup() {
-    Serial.begin(115200);
+  Serial.begin(115200);
+    
+
+//  Serial.println("Booting ...");
+//
+//  Serial.println("Mounting SPIFFS ...");
+//  if (!SPIFFS.begin(true)) {
+//    // if you have not used SPIFFS before on a ESP32, it will show this error.
+//    // after a reboot SPIFFS will be configured and will happily work.
+//    Serial.println("ERROR: Cannot mount SPIFFS, Rebooting");
+//    rebootESP("ERROR: Cannot mount SPIFFS, Rebooting");
+//  }
     sensors[0] = false;
     sensors[1] = false;
     sensors[2] = false;
@@ -207,14 +276,18 @@ void setup() {
     pinMode(IR_pin5,INPUT);
     i2s_driver_install(i2s_num, &i2s_config, 0, NULL);
     i2s_set_pin(i2s_num, &pin_config);
-    pinMode(5, OUTPUT); 
-    digitalWrite(5, HIGH); // SD card chips select, must use GPIO 5 (ESP32 SS)
+  delay(3000);
+  pinMode(5, OUTPUT); 
+   digitalWrite(5, HIGH); // SD card chips select, must use GPIO 5 (ESP32 SS)
     if(!SD.begin(5,SPI,4000000,"/sd",10,false)) {
         Serial.println("Error talking to SD card!");
         while(true);                  // end program
     }
+   delay(3000);
+   delay(3000);
     if(InitWavFiles() == false)
         while(true);                                   // If a problem terminate program   
+   delay(3000);
     Wav1.Repeat = true;                                  // Wav1 will auto repeat
     Wav1.Playing = sensors[0];                           // We set wav1 to play comtinuously 
     Wav2.Repeat = true;                                  // Wav2 will auto repeat
@@ -225,64 +298,102 @@ void setup() {
     Wav4.Playing = sensors[3];
     Wav5.Repeat = true;
     Wav5.Playing = sensors[4];
-    // CloseWaveFiles();
-    Serial.print("SD Free: "); Serial.println(humanReadableSize((SD.totalBytes() - SD.usedBytes())));
-    Serial.print("SD Used: "); Serial.println(humanReadableSize(SD.usedBytes()));
-    Serial.print("SD Total: "); Serial.println(humanReadableSize(SD.totalBytes()));
-    Serial.println(listFiles());
-    Serial.println("\nLoading Configuration ...");
+  // CloseWaveFiles();
+  Serial.print("SD Free: "); Serial.println(humanReadableSize((SD.totalBytes() - SD.usedBytes())));
+  Serial.print("SD Used: "); Serial.println(humanReadableSize(SD.usedBytes()));
+  Serial.print("SD Total: "); Serial.println(humanReadableSize(SD.totalBytes()));
+  delay(3000);
+  Serial.println(listFiles());
+  Serial.println("\nLoading Configuration ...");
 
-    config.ssid = default_ssid;
-    config.wifipassword = default_wifipassword;
-    config.webserverporthttp = default_webserverporthttp;
-    Serial.print("\nConnecting to Wifi: ");
-    WiFi.softAP(ssid, password);
-    IPAddress IP = WiFi.softAPIP();
-    Serial.print("AP IP address: ");
-    Serial.println(IP);
-    Volume=float(analogRead(POT_VOL_ANALOG_IN))/2047;
-    Serial.println(Volume);
-    Serial.println("\n\nNetwork Configuration:");
-    Serial.println("----------------------");
-    Serial.print("         SSID: "); Serial.println(WiFi.SSID());
-    Serial.print("  Wifi Status: "); Serial.println(WiFi.status());
-    Serial.print("Wifi Strength: "); Serial.print(WiFi.RSSI()); Serial.println(" dBm");
-    Serial.print("          MAC: "); Serial.println(WiFi.macAddress());
-    Serial.print("           IP: "); Serial.println(WiFi.localIP());
-    Serial.print("       Subnet: "); Serial.println(WiFi.subnetMask());
-    Serial.print("      Gateway: "); Serial.println(WiFi.gatewayIP());
-    Serial.print("        DNS 1: "); Serial.println(WiFi.dnsIP(0));
-    Serial.print("        DNS 2: "); Serial.println(WiFi.dnsIP(1));
-    Serial.print("        DNS 3: "); Serial.println(WiFi.dnsIP(2));
-    // configure web server
-    Serial.println("\nConfiguring Webserver ...");
-    server = new AsyncWebServer(config.webserverporthttp);
-    configureWebServer();
-    // startup web server
-    Serial.println("Starting Webserver ...");
-    server->begin();
-    Serial.println("Hello user, please connect to Paper Sequencer network the password is: 123456789");
-    Serial.println("go to this website:%d ",IP);
-    Serial.println("upload your wav files and make sure its 16bits and 16khz");
+  config.ssid = default_ssid;
+  config.wifipassword = default_wifipassword;
+  config.webserverporthttp = default_webserverporthttp;
+  Serial.print("\nConnecting to Wifi: ");
+  WiFi.softAP(ssid, password);
+  IPAddress IP = WiFi.softAPIP();
+  Serial.print("AP IP address: ");
+  Serial.println(IP);
+  Volume=float(analogRead(POT_VOL_ANALOG_IN))/2047;
+
+   delay(3000);
+//  //WiFi.begin(config.ssid.c_str(), config.wifipassword.c_str());
+//  //while (WiFi.status() != WL_CONNECTED) {
+//  //  delay(500);
+  //  Serial.print(".");
+  //}
+  Serial.println("\n\nNetwork Configuration:");
+  Serial.println("----------------------");
+  Serial.print("         SSID: "); Serial.println(WiFi.SSID());
+  Serial.print("  Wifi Status: "); Serial.println(WiFi.status());
+  Serial.print("Wifi Strength: "); Serial.print(WiFi.RSSI()); Serial.println(" dBm");
+  Serial.print("          MAC: "); Serial.println(WiFi.macAddress());
+  Serial.print("           IP: "); Serial.println(WiFi.localIP());
+  Serial.print("       Subnet: "); Serial.println(WiFi.subnetMask());
+  Serial.print("      Gateway: "); Serial.println(WiFi.gatewayIP());
+  Serial.print("        DNS 1: "); Serial.println(WiFi.dnsIP(0));
+  Serial.print("        DNS 2: "); Serial.println(WiFi.dnsIP(1));
+  Serial.print("        DNS 3: "); Serial.println(WiFi.dnsIP(2));
+  // configure web server
+  Serial.println("\nConfiguring Webserver ...");
+  server = new AsyncWebServer(config.webserverporthttp);
+  configureWebServer();
+//  server->on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
+//    String logmessage = "Client:" + request->client()->remoteIP().toString() + + " " + request->url();
+//    Serial.println(logmessage);
+//    request->send_P(200, "text/html", stop_html);
+//  });
+   delay(3000);
+  // startup web server
+  Serial.println("Starting Webserver ...");
+  server->begin();
+//  server->on("/", HTTP_GET, [](AsyncWebServerRequest * request) {
+//    String logmessage = "Client:" + request->client()->remoteIP().toString() + + " " + request->url();
+//    Serial.println(logmessage);
+//    request->send_P(200, "text/html", stop_html);
+//  });
+
 }
 
 void loop() {
-    switchState = digitalRead(pushButtonPin);
-    if (switchState != previousSwitchState) {
-        if (switchState == HIGH) {
-            server->on("/html", HTTP_GET, [](AsyncWebServerRequest * request) {
-            request->send(200, "text/html", "<p>Hello!</p>");});
-            server->begin();
-            if(!is_init){
-                InitWavFiles();
-                is_init = true;
-            }
-        isSwitchOn = !isSwitchOn;
+  switchState = digitalRead(pushButtonPin);
+
+  // Check if the switch state has changed
+  if (switchState != previousSwitchState) {
+    // If the switch state is HIGH, toggle the value of isSwitchOn
+    if (switchState == HIGH) {
+      //if(previousSwitchState){
+        server->on("/html", HTTP_GET, [](AsyncWebServerRequest * request) {
+        request->send(200, "text/html", "<p>Hello!</p>");});
+        server->begin();
+        if(!is_init){
+          InitWavFiles();
+          is_init = true;
         }
-        // Update the previous switch state
-        previousSwitchState = switchState;
+        
+      //}
+      // else {
+      //   // CloseWaveFiles();
+      //   configureWebServer();
+      // }
+      isSwitchOn = !isSwitchOn;
     }
-    PlayWavs();  // Have to keep calling this to keep the wav file playing
+    // Update the previous switch state
+    previousSwitchState = switchState;
+  }
+
+  // Use the value of isSwitchOn for further processing
+ // if (isSwitchOn) {
+   // InitWavFiles();
+     PlayWavs();  // Have to keep calling this to keep the wav file playing
+
+//  } else {
+//     
+//     //configureWebServer();
+//  }
+
+  // Add a small delay to avoid rapid toggling when the switch is pressed
+  //delay(50);
 }
 
 int findMax(int a, int b, int c, int d, int e) {
@@ -302,17 +413,18 @@ int findMax(int a, int b, int c, int d, int e) {
     return maxNum;
 }
 
+
 void getSensors(){
-    int IRvalue1 = digitalRead(IR_pin1);
+  int IRvalue1 = digitalRead(IR_pin1);
     int IRvalue2 = digitalRead(IR_pin2);
     int IRvalue3 = digitalRead(IR_pin3);
     int IRvalue4 = digitalRead(IR_pin4);
     int IRvalue5 = digitalRead(IR_pin5);
-    PinState1 = HIGH;
-    PinState2 = HIGH;
-    PinState3 = HIGH;
-    PinState4 = HIGH;
-    PinState5 = HIGH;
+    PinState1=HIGH;
+    PinState2=HIGH;
+    PinState3=HIGH;
+    PinState4=HIGH;
+    PinState5=HIGH;
     int counter = 0;
     if (IRvalue1 == LOW){//second to the left
         PinState1=LOW;
@@ -339,6 +451,7 @@ void getSensors(){
         counter++;
         sensors[4] = true;
     }
+
 }
 
 
@@ -356,11 +469,10 @@ void PlayWavs()
     static uint16_t BytesReadFromFile;                  // Max Num bytes actually read from the wav files which will either be
                                                         // NUM_BYTES_TO_READ_FROM_FILE or less than this if we are very
                                                         // near the end of all files.
-    Volume=float(analogRead(POT_VOL_ANALOG_IN))/2047;
-    if(Volume<=0.5){
-        Volume=0;
-    }
-    Serial.println(Volume);
+     Volume=float(analogRead(POT_VOL_ANALOG_IN))/2047;
+     if(Volume<=0.5){
+       Volume=0;
+     }
     if(ReadingFile)                                     // Read next chunk of data in from files 
     {
         ReadFiles();                                      // Read data into the wavs own buffers
@@ -368,87 +480,89 @@ void PlayWavs()
         ReadingFile = false;                                // Switch to sending the buffer to the I2S
     }
     else
-        ReadingFile = FillI2SBuffer(Samples,BytesReadFromFile);   // We keep calling this routine until it returns true, at which point
-                                                                    // this will swap us back to Reading the next block of data from the file.
-                                                                    // Reading true means it has managed to push all the data to the I2S 
-                                                                    // Handler, false means there still more to do and you should call this
-                                                                    // routine again and again until it returns true.
+    ReadingFile = FillI2SBuffer(Samples,BytesReadFromFile);   // We keep calling this routine until it returns true, at which point
+                                                                // this will swap us back to Reading the next block of data from the file.
+                                                                // Reading true means it has managed to push all the data to the I2S 
+                                                                // Handler, false means there still more to do and you should call this
+                                                                // routine again and again until it returns true.
 
-    if (PinState1 != previousPinState1) {
-        // If the switch state is HIGH, toggle the value of isSwitchOn
-        if (previousPinState1== LOW) {
-            Wav1.Repeat = true;   
-        } else {
-            Serial.println("i shouldnt repeat");
+     if (PinState1 != previousPinState1) {
+    // If the switch state is HIGH, toggle the value of isSwitchOn
+    if (previousPinState1== LOW) {
+        Wav1.Repeat = true;   
+            
+    }
+       else {
             Wav1.Repeat = false;
             Wav1.WavFile.seek(44);                                 // Reset to start of wav data  
-            Wav1.TotalBytesRead = 0;    
-        }
+            Wav1.TotalBytesRead = 0;  
+             
+   }
     //Update the previous switch state
     previousPinState1 = PinState1;
+  }
+   if (PinState2 != previousPinState2) {
+    // If the switch state is HIGH, toggle the value of isSwitchOn
+    if (previousPinState2== LOW) {
+        Wav2.Repeat = true;   
+            
     }
-    if (PinState2 != previousPinState2) {
-        // If the switch state is HIGH, toggle the value of isSwitchOn
-        if (previousPinState2== LOW) {
-            Serial.println("i should repeat");
-            Wav2.Repeat = true;   
-                
-        }
-        else {
-                Serial.println("i shouldnt repeat");
-                Wav2.Repeat = false;
-                Wav2.WavFile.seek(44);                                 // Reset to start of wav data  
-                Wav2.TotalBytesRead = 0;  
-        }
-        //Update the previous switch state
-        previousPinState2 = PinState2;
+       else {
+            Wav2.Repeat = false;
+            Wav2.WavFile.seek(44);                                 // Reset to start of wav data  
+            Wav2.TotalBytesRead = 0;  
+             
+   }
+    //Update the previous switch state
+    previousPinState2 = PinState2;
+  }
+ if (PinState3 != previousPinState3) {
+    // If the switch state is HIGH, toggle the value of isSwitchOn
+    if (previousPinState3== LOW) {
+        Wav3.Repeat = true;   
+            
     }
-    if (PinState3 != previousPinState3) {
-        // If the switch state is HIGH, toggle the value of isSwitchOn
-        if (previousPinState3== LOW) {
-            Serial.println("i should repeat");
-            Wav3.Repeat = true;   
-                
-        } else {
-            Serial.println("i shouldnt repeat");
+       else {
             Wav3.Repeat = false;
             Wav3.WavFile.seek(44);                                 // Reset to start of wav data  
-            Wav3.TotalBytesRead = 0;              
-        }
-        //Update the previous switch state
-        previousPinState3 = PinState3;
-    }
+            Wav3.TotalBytesRead = 0;  
+             
+   }
+    //Update the previous switch state
+    previousPinState3 = PinState3;
+  }
 
    if (PinState4 != previousPinState4) {
-        // If the switch state is HIGH, toggle the value of isSwitchOn
-        if (previousPinState4== LOW) {
-            Serial.println("i should repeat");
-            Wav4.Repeat = true;   
-                
-        } else {
-            Serial.println("i shouldnt repeat");
+    // If the switch state is HIGH, toggle the value of isSwitchOn
+    if (previousPinState4== LOW) {
+        Wav4.Repeat = true;   
+            
+    }
+       else {
             Wav4.Repeat = false;
             Wav4.WavFile.seek(44);                                 // Reset to start of wav data  
             Wav4.TotalBytesRead = 0;  
-        }
-        //Update the previous switch state
-        previousPinState4 = PinState4;
-    }
+             
+   }
+    //Update the previous switch state
+    previousPinState4 = PinState4;
+  }
+
 
    if (PinState5 != previousPinState5) {
-        // If the switch state is HIGH, toggle the value of isSwitchOn
-        if (previousPinState5== LOW) {
-            Wav5.Repeat = true;   
-                
-        } else {
-                Wav5.Repeat = false;
-                Wav5.WavFile.seek(44);                                 // Reset to start of wav data  
-                Wav5.TotalBytesRead = 0;  
-                
-        }
-        //Update the previous switch state
-        previousPinState5 = PinState5;
+    // If the switch state is HIGH, toggle the value of isSwitchOn
+    if (previousPinState5== LOW) {
+        Wav5.Repeat = true;   
+            
     }
+       else {
+          Wav5.Repeat = false;
+          Wav5.WavFile.seek(44);                                 // Reset to start of wav data  
+          Wav5.TotalBytesRead = 0;            
+   }
+    //Update the previous switch state
+    previousPinState5 = PinState5;
+  }
     sensors[0] = false;
     sensors[1] = false;
     sensors[2] = false;
@@ -499,6 +613,7 @@ uint16_t MixWavs(byte* Samples)
     // We now alter the data according to the volume control
     for(i = 0; i < MaxBytesInBuffer; i += 2)  // We step 2 bytes at a time as we're using 16bits per channel
         *((int16_t *)(Samples + i)) = (*((int16_t *)(Samples + i)))*Volume; 
+
     return MaxBytesInBuffer;
 }
 
@@ -524,17 +639,18 @@ void ReadFile(Wav_Struct *Wav)
     float Volume;               
     
     if(Wav->TotalBytesRead + NUM_BYTES_TO_READ_FROM_FILE > Wav->DataSize)   // If next read will go past the end then adjust the 
-        Wav->LastNumBytesRead = Wav->DataSize-Wav->TotalBytesRead;          // amount to read to whatever is remaining to read
+        Wav->LastNumBytesRead = Wav->DataSize-Wav->TotalBytesRead;                    // amount to read to whatever is remaining to read
     else
-        Wav->LastNumBytesRead = NUM_BYTES_TO_READ_FROM_FILE;                // Default to max to read
+        Wav->LastNumBytesRead = NUM_BYTES_TO_READ_FROM_FILE;                          // Default to max to read
       
-    Wav->WavFile.read(Wav->Samples, Wav->LastNumBytesRead);                 // Read in the bytes from the file
-    Wav->TotalBytesRead += Wav->LastNumBytesRead;                           // Update the total bytes red in so far
+    Wav->WavFile.read(Wav->Samples, Wav->LastNumBytesRead);                  // Read in the bytes from the file
+    Wav->TotalBytesRead += Wav->LastNumBytesRead;                        // Update the total bytes red in so far
     
-    if(Wav->TotalBytesRead >= Wav->DataSize){                                // Have we read in all the data?
+    if(Wav->TotalBytesRead >= Wav->DataSize)              // Have we read in all the data?
+    {
         if(Wav->Repeat){
-            Wav->WavFile.seek(44);                                          // Reset to start of wav data  
-            Wav->TotalBytesRead = 0;                                        // Clear to no bytes read in so far 
+            Wav->WavFile.seek(44);                                 // Reset to start of wav data  
+            Wav->TotalBytesRead = 0;                         // Clear to no bytes read in so far 
         } 
         else
             Wav->Playing = false;                                    // Flag that wav has completed
@@ -551,15 +667,18 @@ bool LoadWavFileHeader(String FileName, Wav_Struct* Wav)
         Serial.println("Could not open :");
         Serial.println(FileName);
         return false;
-    } else {
+    }
+    else {
         Wav->WavFile.read((byte *) &WavHeader,44);        // Read in the WAV header, which is first 44 bytes of the file. 
                                                         // We have to typecast to bytes for the "read" function
-        if(ValidWavData(&WavHeader)) {
+        if(ValidWavData(&WavHeader))
+        {
             DumpWAVHeader(&WavHeader);                      // Dump the header data to serial, optional!
             Serial.println();
             Wav->DataSize=WavHeader.DataSize;                    // Copy the data size into our wav structure
             return true;
-        } else
+        }
+        else
             return false;
     }
 }
@@ -583,23 +702,23 @@ bool InitWavFiles()
         Serial.println("1 is ok");
         Prev_wav1=Curr_wav1;
         Curr_wav1="/1_16_16.wav";
-        if(LoadWavFileHeader("/2_16_16.wav", &Wav2)){
-            Serial.println("2 is ok");
-            Prev_wav2=Curr_wav2;
-            Curr_wav2="/2_16_16.wav";
-            if( LoadWavFileHeader("/3_16_16.wav", &Wav3)){
-                Serial.println("3 is ok");
-                Prev_wav3=Curr_wav3;
-                Curr_wav3="/3_16_16.wav";
-                if( LoadWavFileHeader("/4_16_16.wav", &Wav4)){
-                    Serial.println("4 is ok");
-                    Prev_wav4=Curr_wav4;
-                    Curr_wav4="/4_16_16.wav";
-                    if(LoadWavFileHeader("/5_16_16.wav", &Wav5)){
-                        Serial.println("5 is ok");
-                        Prev_wav5=Curr_wav5;
-                        Curr_wav5="/5_16_16.wav";
-                        return true;
+       if(LoadWavFileHeader("/2_16_16.wav", &Wav2)){
+         Serial.println("2 is ok");
+          Prev_wav2=Curr_wav2;
+          Curr_wav2="/2_16_16.wav";
+           if( LoadWavFileHeader("/3_16_16.wav", &Wav3)){
+             Serial.println("3 is ok");
+              Prev_wav3=Curr_wav3;
+              Curr_wav3="/3_16_16.wav";
+               if( LoadWavFileHeader("/4_16_16.wav", &Wav4)){
+                 Serial.println("4 is ok");
+                  Prev_wav4=Curr_wav4;
+                  Curr_wav4="/4_16_16.wav";
+                   if(LoadWavFileHeader("/5_16_16.wav", &Wav5)){
+                     Serial.println("5 is ok");
+                    Prev_wav5=Curr_wav5;
+                    Curr_wav5="/5_16_16.wav";
+                    return true;
                     }
                 }
             }
@@ -613,7 +732,9 @@ String listFiles(bool ishtml) {
   String returnText = "";
   Serial.println("Listing files stored on SPIFFS");
   File root = SD.open("/");
+   delay(3000);
   File foundfile = root.openNextFile();
+   delay(3000);
   if (ishtml) {
     returnText += "<table><tr><th align='left'>Name</th><th align='left'>Size</th></tr>";
   }
@@ -624,6 +745,7 @@ String listFiles(bool ishtml) {
       returnText += "File: " + String(foundfile.name()) + "\n";
     }
     foundfile = root.openNextFile();
+   delay(3000);
   }
   if (ishtml) {
     returnText += "</table>";
@@ -672,162 +794,163 @@ void configureWebServer() {
 
 // handles uploads
 void handleUpload1(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final) {
-    String logmessage = "Client:" + request->client()->remoteIP().toString() + " " + request->url();
+  String logmessage = "Client:" + request->client()->remoteIP().toString() + " " + request->url();
+  Serial.println(logmessage);
+
+  if (!index) {
+    logmessage = "Upload Start: " + String(filename);
+    // open the file on first call and store the file handle in the request object
+    if(SD.exists("/test1.wav")){
+        SD.remove("/test1.wav"); 
+     }
+    request->_tempFile = SD.open("/test1.wav" , "w");
+
     Serial.println(logmessage);
+  }
 
-    if (!index) {
-        logmessage = "Upload Start: " + String(filename);
-        // open the file on first call and store the file handle in the request object
-        if(SD.exists("/test1.wav")){
-            SD.remove("/test1.wav"); 
-        }
-        request->_tempFile = SD.open("/test1.wav" , "w");
-        Serial.println(logmessage);
-    }
+  if (len) {
+    // stream the incoming chunk to the opened file
+    request->_tempFile.write(data, len);
+    logmessage = "Writing file: " + String(filename) + " index=" + String(index) + " len=" + String(len);
+    Serial.println(logmessage);
+  }
 
-    if (len) {
-        // stream the incoming chunk to the opened file
-        request->_tempFile.write(data, len);
-        logmessage = "Writing file: " + String(filename) + " index=" + String(index) + " len=" + String(len);
-        Serial.println(logmessage);
-    }
-
-    if (final) {
-        logmessage = "Upload Complete: " + String(filename) + ",size: " + String(index + len);
-        // close the file handle as the upload is now done
-        request->_tempFile.close();
-        Serial.println(logmessage);
-        request->redirect("/");
-    }
+  if (final) {
+    logmessage = "Upload Complete: " + String(filename) + ",size: " + String(index + len);
+    // close the file handle as the upload is now done
+    request->_tempFile.close();
+    Serial.println(logmessage);
+    request->redirect("/");
+  }
     LoadWavFileHeader("/test1.wav", &Wav1);
 
 }
 void handleUpload2(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final) {
-    String logmessage = "Client:" + request->client()->remoteIP().toString() + " " + request->url();
+  String logmessage = "Client:" + request->client()->remoteIP().toString() + " " + request->url();
+  Serial.println(logmessage);
+
+  if (!index) {
+    logmessage = "Upload Start: " + String(filename);
+    // open the file on first call and store the file handle in the request object
+    if(SD.exists("/test2.wav")){
+        SD.remove("/test2.wav"); 
+     }
+    request->_tempFile = SD.open("/test2.wav" , "w");
+
     Serial.println(logmessage);
+  }
 
-    if (!index) {
-        logmessage = "Upload Start: " + String(filename);
-        // open the file on first call and store the file handle in the request object
-        if(SD.exists("/test2.wav")){
-            SD.remove("/test2.wav"); 
-        }
-        request->_tempFile = SD.open("/test2.wav" , "w");
+  if (len) {
+    // stream the incoming chunk to the opened file
+    request->_tempFile.write(data, len);
+    logmessage = "Writing file: " + String(filename) + " index=" + String(index) + " len=" + String(len);
+    Serial.println(logmessage);
+  }
 
-        Serial.println(logmessage);
-    }
-
-    if (len) {
-        // stream the incoming chunk to the opened file
-        request->_tempFile.write(data, len);
-        logmessage = "Writing file: " + String(filename) + " index=" + String(index) + " len=" + String(len);
-        Serial.println(logmessage);
-    }
-
-    if (final) {
-        logmessage = "Upload Complete: " + String(filename) + ",size: " + String(index + len);
-        // close the file handle as the upload is now done
-        request->_tempFile.close();
-        Serial.println(logmessage);
-        request->redirect("/");
-    }
-    LoadWavFileHeader("/test2.wav", &Wav2);
+  if (final) {
+    logmessage = "Upload Complete: " + String(filename) + ",size: " + String(index + len);
+    // close the file handle as the upload is now done
+    request->_tempFile.close();
+    Serial.println(logmessage);
+    request->redirect("/");
+  }
+  LoadWavFileHeader("/test2.wav", &Wav2);
 }
 
 void handleUpload3(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final) {
-    String logmessage = "Client:" + request->client()->remoteIP().toString() + " " + request->url();
+  String logmessage = "Client:" + request->client()->remoteIP().toString() + " " + request->url();
+  Serial.println(logmessage);
+
+  if (!index) {
+    logmessage = "Upload Start: " + String(filename);
+    // open the file on first call and store the file handle in the request object
+    if(SD.exists("/test3.wav")){
+        SD.remove("/test3.wav"); 
+     }
+    request->_tempFile = SD.open("/test3.wav" , "w");
+
     Serial.println(logmessage);
+  }
 
-    if (!index) {
-        logmessage = "Upload Start: " + String(filename);
-        // open the file on first call and store the file handle in the request object
-        if(SD.exists("/test3.wav")){
-            SD.remove("/test3.wav"); 
-        }
-        request->_tempFile = SD.open("/test3.wav" , "w");
+  if (len) {
+    // stream the incoming chunk to the opened file
+    request->_tempFile.write(data, len);
+    logmessage = "Writing file: " + String(filename) + " index=" + String(index) + " len=" + String(len);
+    Serial.println(logmessage);
+  }
 
-        Serial.println(logmessage);
-    }
-
-    if (len) {
-        // stream the incoming chunk to the opened file
-        request->_tempFile.write(data, len);
-        logmessage = "Writing file: " + String(filename) + " index=" + String(index) + " len=" + String(len);
-        Serial.println(logmessage);
-    }
-
-    if (final) {
-        logmessage = "Upload Complete: " + String(filename) + ",size: " + String(index + len);
-        // close the file handle as the upload is now done
-        request->_tempFile.close();
-        Serial.println(logmessage);
-        request->redirect("/");
-    }
-    LoadWavFileHeader("/test3.wav", &Wav3);
+  if (final) {
+    logmessage = "Upload Complete: " + String(filename) + ",size: " + String(index + len);
+    // close the file handle as the upload is now done
+    request->_tempFile.close();
+    Serial.println(logmessage);
+    request->redirect("/");
+  }
+   LoadWavFileHeader("/test3.wav", &Wav3);
 }
 
 void handleUpload4(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final) {
-    String logmessage = "Client:" + request->client()->remoteIP().toString() + " " + request->url();
+  String logmessage = "Client:" + request->client()->remoteIP().toString() + " " + request->url();
+  Serial.println(logmessage);
+
+  if (!index) {
+    logmessage = "Upload Start: " + String(filename);
+    // open the file on first call and store the file handle in the request object
+    if(SD.exists("/test4.wav")){
+        SD.remove("/test4.wav"); 
+     }
+    request->_tempFile = SD.open("/test4.wav" , "w");
+
     Serial.println(logmessage);
+  }
 
-    if (!index) {
-        logmessage = "Upload Start: " + String(filename);
-        // open the file on first call and store the file handle in the request object
-        if(SD.exists("/test4.wav")){
-            SD.remove("/test4.wav"); 
-        }
-        request->_tempFile = SD.open("/test4.wav" , "w");
+  if (len) {
+    // stream the incoming chunk to the opened file
+    request->_tempFile.write(data, len);
+    logmessage = "Writing file: " + String(filename) + " index=" + String(index) + " len=" + String(len);
+    Serial.println(logmessage);
+  }
 
-        Serial.println(logmessage);
-    }
-
-    if (len) {
-        // stream the incoming chunk to the opened file
-        request->_tempFile.write(data, len);
-        logmessage = "Writing file: " + String(filename) + " index=" + String(index) + " len=" + String(len);
-        Serial.println(logmessage);
-    }
-
-    if (final) {
-        logmessage = "Upload Complete: " + String(filename) + ",size: " + String(index + len);
-        // close the file handle as the upload is now done
-        request->_tempFile.close();
-        Serial.println(logmessage);
-        request->redirect("/");
-    }
-    LoadWavFileHeader("/test4.wav", &Wav4);
+  if (final) {
+    logmessage = "Upload Complete: " + String(filename) + ",size: " + String(index + len);
+    // close the file handle as the upload is now done
+    request->_tempFile.close();
+    Serial.println(logmessage);
+    request->redirect("/");
+  }
+  LoadWavFileHeader("/test4.wav", &Wav4);
 }
 
 void handleUpload5(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final) {
-    String logmessage = "Client:" + request->client()->remoteIP().toString() + " " + request->url();
+  String logmessage = "Client:" + request->client()->remoteIP().toString() + " " + request->url();
+  Serial.println(logmessage);
+
+  if (!index) {
+    logmessage = "Upload Start: " + String(filename);
+    // open the file on first call and store the file handle in the request object
+    if(SD.exists("/test5.wav")){
+        SD.remove("/test5.wav"); 
+     }
+    request->_tempFile = SD.open("/test5.wav" , "w");
+
     Serial.println(logmessage);
+  }
 
-    if (!index) {
-        logmessage = "Upload Start: " + String(filename);
-        // open the file on first call and store the file handle in the request object
-        if(SD.exists("/test5.wav")){
-            SD.remove("/test5.wav"); 
-        }
-        request->_tempFile = SD.open("/test5.wav" , "w");
+  if (len) {
+    // stream the incoming chunk to the opened file
+    request->_tempFile.write(data, len);
+    logmessage = "Writing file: " + String(filename) + " index=" + String(index) + " len=" + String(len);
+    Serial.println(logmessage);
+  }
 
-        Serial.println(logmessage);
-    }
-
-    if (len) {
-        // stream the incoming chunk to the opened file
-        request->_tempFile.write(data, len);
-        logmessage = "Writing file: " + String(filename) + " index=" + String(index) + " len=" + String(len);
-        Serial.println(logmessage);
-    }
-
-    if (final) {
-        logmessage = "Upload Complete: " + String(filename) + ",size: " + String(index + len);
-        // close the file handle as the upload is now done
-        request->_tempFile.close();
-        Serial.println(logmessage);
-        request->redirect("/");
-    }
-    LoadWavFileHeader("/test5.wav", &Wav5);
+  if (final) {
+    logmessage = "Upload Complete: " + String(filename) + ",size: " + String(index + len);
+    // close the file handle as the upload is now done
+    request->_tempFile.close();
+    Serial.println(logmessage);
+    request->redirect("/");
+  }
+  LoadWavFileHeader("/test5.wav", &Wav5);
 }
 
 void handleUpload6(AsyncWebServerRequest *request, String filename, size_t index, uint8_t *data, size_t len, bool final) {
@@ -858,7 +981,9 @@ String processor(const String& var) {
   return String();
 }
 
+
 void CloseWaveFiles(){
+  
   Wav1.WavFile.close();
   Prev_wav1=Curr_wav1;
   Wav2.WavFile.close();
@@ -869,8 +994,8 @@ void CloseWaveFiles(){
   Prev_wav4=Curr_wav4;
   Wav5.WavFile.close();
   Prev_wav5=Curr_wav5;
-}
-
+  
+  }
 bool FillI2SBuffer(byte* Samples,uint16_t BytesInBuffer)
 {
     // Writes bytes to buffer, returns true if all bytes sent else false, keeps track itself of how many left
