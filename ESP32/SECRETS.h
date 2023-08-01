@@ -1,2 +1,2 @@
-WIFI_SSID : for wifi network name 
+WIFI_SSID : Paper Sequencer
 WIFI_PASSWORD : for wifi network password
