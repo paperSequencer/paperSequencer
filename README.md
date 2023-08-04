@@ -24,7 +24,8 @@ The user can upload an audio file for each of the five disks.
 
 ## Physical model:
 
-<img src="images/IMG_6860.jpeg" width="450" height="550">
+<img src="images/IMG_6951.jpeg" width="450" height="550">
+<img src="images/IMG_6846.jpeg" width="450" height="550">
 <img src="images/IMG_6932.jpeg" width="450" height="550">
 <img src="images/pic1.jpeg" width="450" height="550">
 <img src="images/pic3.jpeg" width="450" height="550">
